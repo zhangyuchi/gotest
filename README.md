@@ -1,4 +1,4 @@
-mamamiya
+gotest
 ========
 
-sync my miya 
+sync my go test file
