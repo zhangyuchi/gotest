@@ -2,43 +2,43 @@ package main
 
 import ( 
 	"fmt"
-	"./_obj/file"
+	"file"
 	"os"
 	"strings"
 )
 
 func cat(f *file.File) {
-        const NBUF = 512
-        var buf [NBUF]byte
-        for {
+	const NBUF = 512
+	var buf [NBUF]byte
+	for {
 		switch nr, er := f.Read(buf[:]); true {
 		case nr < 0:
-			fmt.Fprintf(os.Stderr, "cat: error reading from %s: %s\n", f.String(), er.String())
+			fmt.Fprintf(os.Stderr, "cat: error reading from %s: %s\n", f.String(), er.Error())
 			os.Exit(1)
 		case nr == 0: // EOF
 			return
 		case nr > 0:
 			if nw, ew := file.Stdout.Write(buf[0:nr]); nw != nr {
-				fmt.Fprintf(os.Stderr, "cat: error writing from %s: %s\n", f.String(), ew.String())
+				fmt.Fprintf(os.Stderr, "cat: error writing from %s: %s\n", f.String(), ew.Error())
 			}
 		}
-        }
+	}
 }
 
 func parseline(buf []byte) []string {
 	//fmt.Printf("read:\n %v\n", string(buf))
-	return strings.Split(string(buf), "\n", -1)
+	return strings.Split(string(buf), "\n")
 }
 
 func parse(f *file.File) []string{
-        const NBUF = 512
-        var buf [NBUF]byte
+	const NBUF = 512
+	var buf [NBUF]byte
 	var bigbuf []byte
 	
-        for {
+	for {
 		switch nr, er := f.Read(buf[:]); true {
 		case nr < 0:
-			fmt.Fprintf(os.Stderr, "error from %s: %s\n", f.String(), er.String())
+			fmt.Fprintf(os.Stderr, "error from %s: %s\n", f.String(), er.Error())
 			os.Exit(1)
 		case nr == 0: // EOF		
 			return parseline(bigbuf)
@@ -63,14 +63,14 @@ func main() {
 
 
 	hello := []byte("hello, world file\n")
-        file.Stdout.Write(hello)
-        f, err := file.Open("/data/cdcdata/ip_area.db",  0,  0)
-        if f == nil {
-		fmt.Printf("can't open file; err=%s\n",  err.String())
+	file.Stdout.Write(hello)
+	f, err := file.Open("/data/cdcdata/ip_area.db",  0,  0)
+	if f == nil {
+		fmt.Printf("can't open file; err=%s\n",  err.Error())
 		os.Exit(1)
         }	
 	defer f.Close()
-
+	
 	Array2 := parse(f)
 /*
 	for i,rec := range Array2 {	// Loop over values received from 'src'.
